@@ -27,21 +27,22 @@ example.
 
     In `(shapes add: aShape)`,
     
-      - The receiver is ...
-      - The argument is ...
-      - The message name is ...
+      - The receiver is 'shapes'.
+      - The argument is 'aShape'.
+      - The message name is 'add'.
 
     In `(shape drawOn: aCanvas)`,
     
-      - The receiver is ...
-      - The argument is ...
-      - The message name is ...
+      - The receiver is 'shape'.
+      - The argument is 'aCanvas'.
+      - The message name is 'drawOn'.
 
     In `(shapes do: [block (shape) (shape drawOn: aCanvas)])`,
     
-      - The receiver is ...
-      - The argument is ...
-      - The message name is ...
+      - The receivers are 'shapes' and 'shape'.
+      - The arguments are '[block (shape) (shape drawOn: aCanvas)]'
+        and 'aCanvas'.
+      - The message names are 'do' and 'drawOn'.
 
 
     _You can now start to read code examples._
@@ -57,13 +58,13 @@ example.
     Given this information, how many arguments do each of the following messages
     take:
 
-      - `+` takes ... argument(s).
+      - `+` takes 1 argument(s).
 
-      - `<=` takes ... argument(s).
+      - `<=` takes 1 argument(s).
 
-      - `print` takes ... argument(s).
+      - `print` takes 0 argument(s).
 
-      - `draw:width:height:` takes ... argument(s).
+      - `draw:width:height:` takes 3 argument(s).
 
 
     _You now know what a message's name tells you about how to use it._
@@ -77,19 +78,19 @@ example.
     (a) Of the message names used in the transcript, which ones are
         part of the _class_ protocol for `Picture`?
 
-        >
+        > empty
         
 
         Which message names are part of the _instance_ protocol for
         `Picture`?
 
-        >
+        > add, renderUsing
 
     
         Which message names are part of the _class_ protocol for
         `TikzCanvas`?
 
-        >
+        > new
         
 
         Which message names are part of the _instance_ protocol for
@@ -106,7 +107,8 @@ example.
           - A class object
           - An instance of a class
         
-        >
+        > For a class protocol, the receiver is a class object.
+          For an instance protocol, the receiver is an instance of a class.
 
 
     _You now know what you can do with each kind of message described
@@ -123,9 +125,8 @@ learn about the mechanisms of message send and dynamic dispatch .
 
     Please edit this answer to put in the correct methods and classes:
 
-      - Dispatch to method m1 on class ?
-      - Dispatch to method  ? on class ?
-        ...
+      - Dispatch to method m1 on class B
+      - Dispatch to method m2 on class C
 
     _You are starting to understand the key mechanism behind all of
     object-oriented programming._
@@ -157,14 +158,28 @@ conditionals in SmallTalk.
         include a statement of what messages are sent to what objects
         and what method definition each message dispatches to.
 
-        >
+        > When isNil message is sent to nil, since nil is an instance of or
+        sub-class of UndefinedObject, the message will dispatch to
+        UndefinedObject’s isNil method which will answer true. However, if
+        isNil is sent to any other object (e.g string, iint, bool), since
+        these objects are instance of or sub-class of Object, method
+        search starts in the class of that object and eventually reaches
+        class Object, where it dispatches to Object’s isNil method, which
+        answers false.
 
 
     (b) Explain _why_ it is desirable to implement object-oriented
         code without explicit conditional tests, and indeed, without
         ever asking an object, "how were you formed?"
 
-        >
+        > It is extensible: To add new cases, we can add a new class instead
+        of altering code at every location in which conditional case analysis
+        is made. For example, if we want to add new kinds of shapes to the
+        picture section, we can add new classes, and dynamic dispatch will
+        handle the logic associated with shape operations; we don't need to
+        interrogate how the shapes were formed ourselves. If we were to try to
+        interrogate ourselves how the object is formed, that would also need
+        to be altered and extended when more classes are added.
 
 
     _You are starting to learn how to work effectively in a world
