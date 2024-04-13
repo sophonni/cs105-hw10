@@ -83,6 +83,9 @@
    (method printrep () (0 print))
 
    (method isZero () true)
+   (method divBase () (NatZero new))
+   (method modBase () 0)
+   (method timesBase () (NatZero new))
 )
 
 ; Represents a natural number greater than 0
@@ -93,6 +96,11 @@
               ; number
 
    (method isZero () false)
+   (method divBase () m)
+   (method modBase () d)
+   
+   (method timesBase ()
+      (Natural first:rest: 0 self))
 
    (method first:rest: (anInteger aNatural) ; private
       (set m aNatural)
@@ -148,9 +156,61 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put your unit tests for Exercise 1 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(check-assert ((Natural fromSmall: 0) isZero))
-(check-assert (((Natural fromSmall: 1) isZero) not))
-(check-assert (((Natural fromSmall: 100) isZero) not))
+      (check-assert ((Natural fromSmall: 0) isZero))
+      (check-assert (((Natural fromSmall: 1) isZero) not))
+      (check-assert (((Natural fromSmall: 100) isZero) not))
+      (check-print (DebugNat of: (Natural fromSmall: 0))
+                   0)
+      (check-print (DebugNat of: 
+                     (Natural fromSmall: ((Natural base) * (Natural base))))
+                  0,1,0,0)
+
+      ;; BASE 2 TESTS
+      (check-print (DebugNat of: (Natural fromSmall: 1))
+                  0,1)
+      (check-print (DebugNat of: (Natural fromSmall: 1000))
+                  0,1,1,1,1,1,0,1,0,0,0)
+      (check-print (DebugNat of: (Natural fromSmall: 1234))
+                  0,1,0,0,1,1,0,1,0,0,1,0)
+      (check-print (DebugNat of: (Natural fromSmall: 4096))
+                  0,1,0,0,0,0,0,0,0,0,0,0,0,0)
+
+      ;; BASE 10 TESTS
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1))
+      ;;             0,1)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1000))
+      ;;             0,1,0,0,0)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1234))
+      ;;             0,1,2,3,4)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 4096))
+      ;;             0,4,0,9,6)
+
+      (check-assert (((NatZero new) divBase) isZero))
+      (check-assert (((NatZero new) divBase) isKindOf: NatZero))
+      (check-assert (((NatZero new) divBase) isKindOf: Natural))
+      (check-expect ((NatZero new) modBase) 0)
+      (check-assert (((NatZero new) modBase) = 0))
+      (check-assert (((NatZero new) modBase) isKindOf: SmallInteger))
+      (check-assert (((NatZero new) timesBase) isZero))
+      (check-assert (((NatZero new) timesBase) isKindOf: NatZero))
+      (check-assert (((NatZero new) timesBase) isKindOf: Natural))
+
+      (check-assert (((Natural fromSmall: 4) divBase) isKindOf: NatNonzero))
+      (check-assert (((Natural fromSmall: 4) divBase) isKindOf: Natural))
+      (check-print  (DebugNat of: ((Natural fromSmall: 4) divBase)) 0,1,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 5) divBase)) 0,1,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 6) divBase)) 0,1,1)
+
+      (check-assert (((Natural fromSmall: 4) modBase) isKindOf: SmallInteger))
+      (check-print  ((Natural fromSmall: 4) modBase) 0)
+      (check-print  ((Natural fromSmall: 5) modBase) 1)
+      (check-print  ((Natural fromSmall: 6) modBase) 0)
+
+      (check-assert (((Natural fromSmall: 4) timesBase) isKindOf: NatNonzero))
+      (check-assert (((Natural fromSmall: 4) timesBase) isKindOf: Natural))
+      (check-print  (DebugNat of: ((Natural fromSmall: 2) timesBase)) 0,1,0,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 5) timesBase)) 0,1,0,1,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 6) timesBase)) 0,1,1,0,0)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

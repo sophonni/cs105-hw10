@@ -10,6 +10,8 @@ Any comments or feedback for course staff: none
 
 
 Command Reference:
+    - usmalltalk -q < bignum.smt
+        OR
     - ledit usmalltalk
     - (use bignum.smt)
 
