@@ -230,10 +230,10 @@ For question 6, read section 10.4.6 (stopping after getting to the end of page
                    the message from         Fraction        Number
                    the interactive prompt)
 
-        negated    Number                     ?                 ?
+        negated    Number                   Fraction        Fraction
 
 
-        +             ?                       ?                 ?
+        +          Number                   Fraction        Fraction
 
                          ... fill in the ? marks ...
 
@@ -255,7 +255,7 @@ design.
         with double dispatch, what is the name of the message it should send in
         response to a `+` message? 
 
-        > 
+        > addLargeIntegerTo
 
 
     (b) Consider the execution of the following message send, where `lint` and
@@ -268,9 +268,9 @@ design.
         which will be referred to by name `self`? Use the names `sint` and/or
         `lint` to answer.
 
-        > ??? will be bound to `anInteger`
-        
-        > `self` will refer to ???
+        > lint will be bound to `anInteger`
+
+        > `self` will refer to sint
     
     (c) In the 7 lessons reading, methods `timesPos:` and `timesNeg:` were
         implemented. Given these methods and what you've learned about double
@@ -278,7 +278,7 @@ design.
         `LargePositiveInteger` class. It will be very similar to the code
         chunk on page 667, and it should use either `timesPos:` or `timesNeg:`.
 
-        >
+        > (method * (anInteger) (anInteger timesPos: self))
 
     _You are ready to implement arithmetic on large integers (exercise 2)._
 

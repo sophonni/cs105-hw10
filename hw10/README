@@ -9,8 +9,17 @@ Any comments or feedback for course staff: none
 
 
 
+Command Reference:
+    - ledit usmalltalk
+    - (use bignum.smt)
+
 Time Track:
     12:30 pm - 1:28 pm
+    1:45 pm - 5:00 pm
+    1:40 pm - 
 
 TODO:
     - CQ::double check 3.a
+    - CQ::double check 7.a
+    - CQ::double check 7.b
+    - exercise1::step6::do we need to throw exception or some sort when given 'x' < 0

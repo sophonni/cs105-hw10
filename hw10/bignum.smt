@@ -9,7 +9,23 @@
 (class Natural
    [subclass-of Magnitude]
 
-   (class-method fromSmall: (anInteger) (self leftAsExercise))
+   (class-method first:rest: (anInteger aNatural) ; private
+      (((anInteger = 0) & (aNatural isZero)) ifTrue:ifFalse:
+         {(NatZero new)}
+         {((NatNonzero new) first:rest: anInteger aNatural)}
+      )
+   )
+   
+   (class-method fromSmall: (anInteger)
+      ((anInteger = 0) ifTrue:ifFalse:
+      {(NatZero new)}
+      {
+         (Natural first:rest: (anInteger mod: (Natural base)) 
+                              (Natural fromSmall:
+                                 (anInteger div: (Natural base))))
+      })
+   )
+
    (class-method base () 2) ; private
 
    ; private methods suggested from textbook (page 672)
@@ -58,13 +74,15 @@
 
 ; Represents a 0 natural number
 (class NatZero
-  [subclass-of Natural]
-  (method invariant () true) ;; private
+   [subclass-of Natural]
+   (method invariant () true) ;; private
 
-  (method timesDigit:plus: (d r) (Natural fromSmall: r)) ; private
+   (method timesDigit:plus: (d r) (Natural fromSmall: r)) ; private
 
   ;; for debugging
-  (method printrep () (0 print))
+   (method printrep () (0 print))
+
+   (method isZero () true)
 )
 
 ; Represents a natural number greater than 0
@@ -73,6 +91,14 @@
   [ivars m d] ; a non-zero natural number is of the form d + m * b, where d
               ; is an integer representing a digit of base b, and m is a natural
               ; number
+
+   (method isZero () false)
+
+   (method first:rest: (anInteger aNatural) ; private
+      (set m aNatural)
+      (set d anInteger)  
+      self
+   )
 
   (method invariant () (((d < (Natural base)) & (d >= 0)) &  ;; private
                        (((m isZero) & (d = 0)) not)))
@@ -122,6 +148,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put your unit tests for Exercise 1 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(check-assert ((Natural fromSmall: 0) isZero))
+(check-assert (((Natural fromSmall: 1) isZero) not))
+(check-assert (((Natural fromSmall: 100) isZero) not))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
