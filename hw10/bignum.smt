@@ -86,6 +86,30 @@
    (method divBase () (NatZero new))
    (method modBase () 0)
    (method timesBase () (NatZero new))
+
+
+
+   ; multiplication
+   (method * (aNatural) self)
+   (method sdivmod:with: (aSmallInteger aBlock)
+      (aBlock value:value: self 0))
+   
+   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+      ((aNatural isZero) ifTrue:ifFalse:
+         {eqBlock}
+         {ltBlock}))
+
+   ; addition with a carry bit
+   (method plus:carry: (aNatural c)
+      ((aNatural isZero) ifTrue:ifFalse:
+         {(Natural fromSmall: c)}
+         {(aNatural plus:carry: (Natural fromSmall: c) 0)}))
+         
+   ; subtraction with a borrow bit
+   (method minus:borrow: (aNatural b)
+      (((aNatural isZero) & (b = 0)) ifTrue:ifFalse:
+         {self}
+         {(self error: ('Bad Subtraction))}))
 )
 
 ; Represents a natural number greater than 0
@@ -212,6 +236,10 @@
       (check-print  (DebugNat of: ((Natural fromSmall: 5) timesBase)) 0,1,0,1,0)
       (check-print  (DebugNat of: ((Natural fromSmall: 6) timesBase)) 0,1,1,0,0)
 
+      (check-error ((NatZero new) minus:borrow: (Natural fromSmall: 0) 1))
+      (check-error ((NatZero new) minus:borrow: (Natural fromSmall: 1) 0))
+      (check-assert (((NatZero new) minus:borrow: (Natural fromSmall: 0) 0)
+                     isZero))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
