@@ -49,7 +49,22 @@
 
    (method sdivmod:with: (n aBlock) (self subclassResponsibility))
 
-   (method decimal () (self leftAsExercise))
+   (method decimal () [locals lst newNat quo rem]
+      (set lst (List new))
+      (set newNat self)
+      ;; Loop adds decimal digits to lst
+      ({(newNat isZero)} whileFalse:
+         {(newNat sdivmod:with: 10 [block (q r) (set quo q) (set rem r)])
+          (lst addFirst: rem)
+          (set newNat quo)
+         })
+
+      ;; if 'lst' is empty, add a 0. Else, return the resulting 'lst'
+      ((lst isEmpty) ifTrue:ifFalse:
+         {(lst addFirst: 0)}
+         {lst})
+      
+   )
    (method isZero  () (self subclassResponsibility))
 
    ; methods that are already implemented for you
@@ -265,7 +280,12 @@
       (check-expect ((Natural fromSmall: 0) smod: 5) 0)
       (check-expect ((Natural fromSmall: 5) smod: 1) 0)
 
-                                 
+      (check-print ((Natural fromSmall: 1) + (Natural fromSmall: 1)) 2)
+      (check-print (Natural fromSmall: 0) 0)
+      (check-print ((Natural fromSmall: 10) + (Natural fromSmall: 5)) 15)
+      (check-print ((Natural fromSmall: 111) + (Natural fromSmall: 755)) 866)
+      (check-print ((Natural fromSmall: 514543) + (Natural fromSmall: 5))
+                     514548)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
