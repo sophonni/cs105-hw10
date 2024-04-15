@@ -119,6 +119,14 @@
               ; is an integer representing a digit of base b, and m is a natural
               ; number
 
+   (method sdivmod:with: (v K) [locals Q' r']
+      (m sdivmod:with: v (block (Q r)
+         (set Q' (Natural first:rest: (((r * (Natural base)) + d) div: v) Q))
+         (set r' (((r * (Natural base)) + d) mod: v))
+         (K value:value: Q' r'))
+      )
+   )
+
    (method isZero () false)
    (method divBase () m)
    (method modBase () d)
@@ -249,6 +257,14 @@
       (check-print  (DebugNat of:
                         ((Natural fromSmall: 1) + (Natural fromSmall: 1)))
                            0,1,0)
+
+      (check-print  (DebugNat of: ((Natural fromSmall: 8) sdiv: 2)) 0,1,0,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 5) sdiv: 2)) 0,1,0)
+      (check-print  (DebugNat of: ((Natural fromSmall: 200) sdiv: 51)) 0,1,1)
+      (check-expect ((Natural fromSmall: 200) smod: 49) 4)
+      (check-expect ((Natural fromSmall: 0) smod: 5) 0)
+      (check-expect ((Natural fromSmall: 5) smod: 1) 0)
+
                                  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
