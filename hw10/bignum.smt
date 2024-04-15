@@ -42,7 +42,7 @@
    (method = (aNatural) (self leftAsExercise))
    (method < (aNatural) (self leftAsExercise))
 
-   (method + (aNatural) (self leftAsExercise))
+   (method + (aNatural) (self plus:carry: aNatural 0))
    (method * (aNatural) (self subclassResponsibility))
    (method subtract:withDifference:ifNegative: (aNatural diffBlock exnBlock)
       (self leftAsExercise))
@@ -180,25 +180,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put your unit tests for Exercise 1 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-      (check-assert ((Natural fromSmall: 0) isZero))
-      (check-assert (((Natural fromSmall: 1) isZero) not))
-      (check-assert (((Natural fromSmall: 100) isZero) not))
-      (check-print (DebugNat of: (Natural fromSmall: 0))
-                   0)
-      (check-print (DebugNat of: 
-                     (Natural fromSmall: ((Natural base) * (Natural base))))
-                  0,1,0,0)
-
-      ;; BASE 2 TESTS
-      (check-print (DebugNat of: (Natural fromSmall: 1))
-                  0,1)
-      (check-print (DebugNat of: (Natural fromSmall: 1000))
-                  0,1,1,1,1,1,0,1,0,0,0)
-      (check-print (DebugNat of: (Natural fromSmall: 1234))
-                  0,1,0,0,1,1,0,1,0,0,1,0)
-      (check-print (DebugNat of: (Natural fromSmall: 4096))
-                  0,1,0,0,0,0,0,0,0,0,0,0,0,0)
-
       ;; BASE 10 TESTS
       ;; (check-print (DebugNat of: (Natural fromSmall: 1))
       ;;             0,1)
@@ -208,6 +189,30 @@
       ;;             0,1,2,3,4)
       ;; (check-print (DebugNat of: (Natural fromSmall: 4096))
       ;;             0,4,0,9,6)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 65536) + 
+      ;;                             (Natural fromSmall: 1))) 0,6,5,5,3,7)
+
+
+      ;; BASE 2 TESTS
+      (check-assert ((Natural fromSmall: 0) isZero))
+      (check-assert (((Natural fromSmall: 1) isZero) not))
+      (check-assert (((Natural fromSmall: 100) isZero) not))
+      (check-print (DebugNat of: (Natural fromSmall: 0))
+                   0)
+      (check-print (DebugNat of: 
+                     (Natural fromSmall: ((Natural base) * (Natural base))))
+                  0,1,0,0)
+
+      (check-print (DebugNat of: (Natural fromSmall: 1))
+                  0,1)
+      (check-print (DebugNat of: (Natural fromSmall: 1000))
+                  0,1,1,1,1,1,0,1,0,0,0)
+      (check-print (DebugNat of: (Natural fromSmall: 1234))
+                  0,1,0,0,1,1,0,1,0,0,1,0)
+      (check-print (DebugNat of: (Natural fromSmall: 4096))
+                  0,1,0,0,0,0,0,0,0,0,0,0,0,0)
+
+
 
       (check-assert (((NatZero new) divBase) isZero))
       (check-assert (((NatZero new) divBase) isKindOf: NatZero))
@@ -240,6 +245,11 @@
       (check-error ((NatZero new) minus:borrow: (Natural fromSmall: 1) 0))
       (check-assert (((NatZero new) minus:borrow: (Natural fromSmall: 0) 0)
                      isZero))
+
+      (check-print  (DebugNat of:
+                        ((Natural fromSmall: 1) + (Natural fromSmall: 1)))
+                           0,1,0)
+                                 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
