@@ -39,8 +39,10 @@
 
    (method timesDigit:plus: (d r) (self subclassResponsibility)) ; private
 
-   (method = (aNatural) (self leftAsExercise))
-   (method < (aNatural) (self leftAsExercise))
+   (method = (aNatural) ((self compare:withLt:withEq:withGt:
+                           aNatural {false} {true} {false}) value))
+   (method < (aNatural) ((self compare:withLt:withEq:withGt:
+                           aNatural {true} {false} {false}) value))
 
    (method + (aNatural) (self plus:carry: aNatural 0))
    (method * (aNatural) (self subclassResponsibility))
@@ -140,6 +142,23 @@
          (set r' (((r * (Natural base)) + d) mod: v))
          (K value:value: Q' r'))
       )
+   )
+
+   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+      [locals X' Y' x0 y0 newBlock]
+         (set X' m)
+         (set x0 d)
+         (set Y' (aNatural divBase))
+         (set y0 (aNatural modBase))
+         (set newBlock [block (x01 y01)
+                           ((x01 = y01) ifTrue:ifFalse:
+                              {eqBlock}
+                              {((x01 < y01) ifTrue:ifFalse:
+                                 {ltBlock}
+                                 {gtBlock})
+                              })
+                     ])
+         (X' compare:withLt:withEq:withGt: Y' ltBlock (newBlock value:value: x0 y0) gtBlock)
    )
 
    (method isZero () false)
@@ -286,6 +305,30 @@
       (check-print ((Natural fromSmall: 111) + (Natural fromSmall: 755)) 866)
       (check-print ((Natural fromSmall: 514543) + (Natural fromSmall: 5))
                      514548)
+
+      (check-print (((Natural fromSmall: 0)
+                     compare-symbol: (Natural fromSmall: 0)) value) EQ)
+      (check-print (((Natural fromSmall: 0)
+                     compare-symbol: (Natural fromSmall: 1)) value) LT)
+      (check-print (((Natural fromSmall: 1)
+                     compare-symbol:(Natural fromSmall: 0)) value) GT)
+      (check-print  (((Natural fromSmall: 1)
+                     compare-symbol: (Natural fromSmall: 1)) value) EQ)
+      (check-print  (((Natural fromSmall: 200)
+                     compare-symbol: (Natural fromSmall: 200)) value) EQ)
+      (check-print  (((Natural fromSmall: 431252)
+                     compare-symbol: (Natural fromSmall: 31231)) value) GT)
+      (check-print  (((Natural fromSmall: 31231)
+                     compare-symbol: (Natural fromSmall: 431252)) value) LT)
+      (check-print  (((Natural fromSmall: 200)
+                     compare-symbol: (Natural fromSmall: 201)) value) LT)
+      (check-print  (((Natural fromSmall: 201)
+                     compare-symbol: (Natural fromSmall: 200)) value) GT)
+      (check-assert ((Natural fromSmall: 200) = (Natural fromSmall: 200)))
+      (check-assert ((Natural fromSmall: 200) < (Natural fromSmall: 201)))
+      (check-assert ((Natural fromSmall: 201) > (Natural fromSmall: 200)))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
