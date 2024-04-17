@@ -39,15 +39,19 @@
 
    (method timesDigit:plus: (d r) (self subclassResponsibility)) ; private
 
-   (method = (aNatural) ((self compare:withLt:withEq:withGt:
-                           aNatural {false} {true} {false}) value))
-   (method < (aNatural) ((self compare:withLt:withEq:withGt:
-                           aNatural {true} {false} {false}) value))
+   (method = (aNatural) (self compare:withLt:withEq:withGt:
+                           aNatural {false} {true} {false}))
+   (method < (aNatural) (self compare:withLt:withEq:withGt:
+                           aNatural {true} {false} {false}))
 
    (method + (aNatural) (self plus:carry: aNatural 0))
    (method * (aNatural) (self subclassResponsibility))
    (method subtract:withDifference:ifNegative: (aNatural diffBlock exnBlock)
-      (self leftAsExercise))
+      ((self < aNatural) ifTrue:ifFalse:
+         {(exnBlock value)}
+         {(diffBlock value: (self minus:borrow: aNatural 0))}
+      )
+   )
 
    (method sdivmod:with: (n aBlock) (self subclassResponsibility))
 
@@ -111,10 +115,20 @@
    (method sdivmod:with: (aSmallInteger aBlock)
       (aBlock value:value: self 0))
    
-   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+   ;; Function: blockCompare:withLt:withEq:withGt: aNatural ltBlock eqBlock
+   ;;                                             gtBlock
+   ;; Purpose: Compares self with aNatural. If self is smaller than 
+   ;;          aNatural, return ltBlock. If they are equal, return
+   ;;          eqBlock. If self is greater, return gtBlock. The blocks are
+   ;;          returned unevaluated.
+   (method blockCompare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
       ((aNatural isZero) ifTrue:ifFalse:
          {eqBlock}
          {ltBlock}))
+   
+   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+      ((self blockCompare:withLt:withEq:withGt: aNatural ltBlock
+         eqBlock gtBlock) value))
 
    ; addition with a carry bit
    (method plus:carry: (aNatural c)
@@ -144,7 +158,13 @@
       )
    )
 
-   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+   ;; Function: blockCompare:withLt:withEq:withGt: aNatural ltBlock eqBlock
+   ;;                                             gtBlock
+   ;; Purpose: Compares self with aNatural. If self is smaller than 
+   ;;          aNatural, return ltBlock. If they are equal, return
+   ;;          eqBlock. If self is greater, return gtBlock. The blocks are
+   ;;          returned unevaluated.
+   (method blockCompare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
       [locals X' Y' x0 y0 newBlock]
          (set X' m)
          (set x0 d)
@@ -155,11 +175,13 @@
                               {eqBlock}
                               {((x01 < y01) ifTrue:ifFalse:
                                  {ltBlock}
-                                 {gtBlock})
-                              })
-                     ])
-         (X' compare:withLt:withEq:withGt: Y' ltBlock (newBlock value:value: x0 y0) gtBlock)
-   )
+                                 {gtBlock})})])
+      (X' blockCompare:withLt:withEq:withGt: Y' ltBlock
+         (newBlock value:value: x0 y0) gtBlock))
+
+   (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+      ((self blockCompare:withLt:withEq:withGt: aNatural ltBlock
+         eqBlock gtBlock) value))
 
    (method isZero () false)
    (method divBase () m)
@@ -171,8 +193,7 @@
    (method first:rest: (anInteger aNatural) ; private
       (set m aNatural)
       (set d anInteger)  
-      self
-   )
+      self)
 
   (method invariant () (((d < (Natural base)) & (d >= 0)) &  ;; private
                        (((m isZero) & (d = 0)) not)))
@@ -306,28 +327,44 @@
       (check-print ((Natural fromSmall: 514543) + (Natural fromSmall: 5))
                      514548)
 
-      (check-print (((Natural fromSmall: 0)
-                     compare-symbol: (Natural fromSmall: 0)) value) EQ)
-      (check-print (((Natural fromSmall: 0)
-                     compare-symbol: (Natural fromSmall: 1)) value) LT)
-      (check-print (((Natural fromSmall: 1)
-                     compare-symbol:(Natural fromSmall: 0)) value) GT)
-      (check-print  (((Natural fromSmall: 1)
-                     compare-symbol: (Natural fromSmall: 1)) value) EQ)
-      (check-print  (((Natural fromSmall: 200)
-                     compare-symbol: (Natural fromSmall: 200)) value) EQ)
-      (check-print  (((Natural fromSmall: 431252)
-                     compare-symbol: (Natural fromSmall: 31231)) value) GT)
-      (check-print  (((Natural fromSmall: 31231)
-                     compare-symbol: (Natural fromSmall: 431252)) value) LT)
-      (check-print  (((Natural fromSmall: 200)
-                     compare-symbol: (Natural fromSmall: 201)) value) LT)
-      (check-print  (((Natural fromSmall: 201)
-                     compare-symbol: (Natural fromSmall: 200)) value) GT)
+      (check-print ((Natural fromSmall: 0)
+                     compare-symbol: (Natural fromSmall: 0)) EQ)
+      (check-print ((Natural fromSmall: 0)
+                     compare-symbol: (Natural fromSmall: 1)) LT)
+      (check-print ((Natural fromSmall: 1)
+                     compare-symbol:(Natural fromSmall: 0)) GT)
+      (check-print  ((Natural fromSmall: 1)
+                     compare-symbol: (Natural fromSmall: 1)) EQ)
+      (check-print  ((Natural fromSmall: 200)
+                     compare-symbol: (Natural fromSmall: 200)) EQ)
+      (check-print  ((Natural fromSmall: 431252)
+                     compare-symbol: (Natural fromSmall: 31231)) GT)
+      (check-print  ((Natural fromSmall: 31231)
+                     compare-symbol: (Natural fromSmall: 431252)) LT)
+      (check-print  ((Natural fromSmall: 200)
+                     compare-symbol: (Natural fromSmall: 201)) LT)
+      (check-print  ((Natural fromSmall: 201)
+                     compare-symbol: (Natural fromSmall: 200)) GT)
       (check-assert ((Natural fromSmall: 200) = (Natural fromSmall: 200)))
       (check-assert ((Natural fromSmall: 200) < (Natural fromSmall: 201)))
       (check-assert ((Natural fromSmall: 201) > (Natural fromSmall: 200)))
 
+      (check-print ((Natural fromSmall: 4)
+                     subtract:withDifference:ifNegative:
+                     (Natural fromSmall: 1) [block (x) x]
+                     {(self error: 'Natural-subtraction-went-negative)}) 3)
+      (check-print ((Natural fromSmall: 45235)
+                     subtract:withDifference:ifNegative:
+                     (Natural fromSmall: 1) [block (x) x]
+                     {(self error: 'Natural-subtraction-went-negative)}) 45234)
+      (check-error ((Natural fromSmall: 10)
+                     subtract:withDifference:ifNegative:
+                     (Natural fromSmall: 15) [block (x) x]
+                     {(self error: 'Natural-subtraction-went-negative)}))
+      (check-print ((Natural fromSmall: 0)
+                     subtract:withDifference:ifNegative:
+                     (Natural fromSmall: 0) [block (x) x]
+                     {(self error: 'Natural-subtraction-went-negative)}) 0)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
