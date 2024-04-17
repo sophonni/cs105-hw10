@@ -366,6 +366,14 @@
                      (Natural fromSmall: 0) [block (x) x]
                      {(self error: 'Natural-subtraction-went-negative)}) 0)
 
+      ;; (Natural addSelector:withMethod: 'squared
+      ;;    (compiled-method () (self * self)))
+      ;; (Natural addSelector:withMethod: 'coerce:
+      ;;    (compiled-method (i) (Natural fromSmall: i)))
+      ;; (Natural addSelector:withMethod: 'raisedToInteger:
+      ;;    (Number compiledMethodAt: 'raisedToInteger:))
+      ;; (check-print ((Natural fromSmall: 10) raisedToInteger: 10) 10000000000)
+      ;; (check-print ((Natural fromSmall:  9) raisedToInteger:  9)   387420489)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

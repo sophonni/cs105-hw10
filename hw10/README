@@ -11,6 +11,7 @@ Any comments or feedback for course staff: none
 
 Command Reference:
     - clear && usmalltalk -q < bignum.smt
+    - echo '(use bignum.smt) (use natural-tests.smt)' | usmalltalk -qq
         OR
     - ledit usmalltalk
     - (use bignum.smt)
