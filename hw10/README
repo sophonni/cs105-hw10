@@ -30,3 +30,4 @@ TODO:
     - exercise1::step6::do we need to throw exception or some sort when given 'x' < 0
     - exercise1::step20::why do we need to value 'value' to evaluate the block
     - exercise2::step2::step6::print function prints 'nil' after desired value
+    - Change base
