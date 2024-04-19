@@ -412,30 +412,66 @@
 
 ; Represents a positive integer
 (class LargePositiveInteger
-  [subclass-of LargeInteger]
+   [subclass-of LargeInteger]
 
 
-  ;; short division (already implemented for you)
-  (method sdiv: (anInteger)
-    ((anInteger isStrictlyPositive) ifTrue:ifFalse: 
-       {(LargePositiveInteger withMagnitude:  (magnitude sdiv: anInteger))}
-       {((((self - (LargeInteger fromSmall: anInteger)) -
-                                                  (LargeInteger fromSmall: 1))
-             sdiv: (anInteger negated))
-            negated)}))
+   ;; short division (already implemented for you)
+   (method sdiv: (anInteger)
+      ((anInteger isStrictlyPositive) ifTrue:ifFalse: 
+         {(LargePositiveInteger withMagnitude:  (magnitude sdiv: anInteger))}
+         {((((self - (LargeInteger fromSmall: anInteger)) -
+                                                   (LargeInteger fromSmall: 1))
+               sdiv: (anInteger negated))
+               negated)}))
+
+   (method print ()
+      (magnitude print))
+
+   (method isNegative () false)
+   (method isNonnegative () true)
+   (method isStrictlyPostive () ((self isZero) not))
 )
 
 ;; Represents a negative integer
 (class LargeNegativeInteger
-  [subclass-of LargeInteger]
-
+   [subclass-of LargeInteger]
 
 
   ;; short division (already implemented for you)
-  (method sdiv: (anInteger)
-    ((self negated) sdiv: (anInteger negated)))
+   (method sdiv: (anInteger)
+      ((self negated) sdiv: (anInteger negated)))
+    
+
+   (method print()
+      ((magnitude isZero) ifFalse:
+         {('- print)}
+      )
+      (magnitude print)
+   )
+
+   (method isNegative () ((self isZero) not))
+   (method isNonnegative () (self isZero))
+   (method isStrictlyPostive () false)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put your unit tests for Exercise 2 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isStrictlyPostive))
+(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isStrictlyPostive) not))
+(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isNonnegative))
+(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isNonnegative))
+(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isNegative) not))
+(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isNegative) not))
+(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: -0)) isNegative) not))
+(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isStrictlyPostive) not))
+(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isStrictlyPostive) not))
+(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isNonnegative) not))
+(check-assert ((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isNonnegative))
+(check-assert ((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isNegative))
+(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isNegative) not))
+(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: -0)) isNegative) not))
+
+
+
