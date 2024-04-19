@@ -68,9 +68,8 @@
       ;; if 'lst' is empty, add a 0. Else, return the resulting 'lst'
       ((lst isEmpty) ifTrue:ifFalse:
          {(lst addFirst: 0)}
-         {lst})
-      
-   )
+         {lst}))
+
    (method isZero  () (self subclassResponsibility))
 
    ; methods that are already implemented for you
@@ -430,6 +429,12 @@
    (method isNegative () false)
    (method isNonnegative () true)
    (method isStrictlyPostive () ((self isZero) not))
+   (method negated () (LargeNegativeInteger withMagnitude: magnitude))
+
+   (method * (aNumber)
+      (magnitude * aNumber))
+   (method multiplyByLargePositiveInteger: (aNumber))
+   (method multiplyByLargeNegativeInteger: (aNumber))
 )
 
 ;; Represents a negative integer
@@ -452,26 +457,73 @@
    (method isNegative () ((self isZero) not))
    (method isNonnegative () (self isZero))
    (method isStrictlyPostive () false)
+   (method negated () (LargePositiveInteger withMagnitude: magnitude))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Put your unit tests for Exercise 2 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isStrictlyPostive))
-(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isStrictlyPostive) not))
-(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isNonnegative))
-(check-assert ((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isNonnegative))
-(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) isNegative) not))
-(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: 0)) isNegative) not))
-(check-assert (((LargePositiveInteger withMagnitude: (Natural fromSmall: -0)) isNegative) not))
-(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isStrictlyPostive) not))
-(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isStrictlyPostive) not))
-(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isNonnegative) not))
-(check-assert ((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isNonnegative))
-(check-assert ((LargeNegativeInteger withMagnitude: (Natural fromSmall: 1)) isNegative))
-(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: 0)) isNegative) not))
-(check-assert (((LargeNegativeInteger withMagnitude: (Natural fromSmall: -0)) isNegative) not))
+(check-assert ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) isStrictlyPostive))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) isStrictlyPostive) not))
+(check-assert ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) isNonnegative))
+(check-assert ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) isNonnegative))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) isNegative) not))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) isNegative) not))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: -0)) isNegative) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) isStrictlyPostive) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) isStrictlyPostive) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) isNonnegative) not))
+(check-assert ((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) isNonnegative))
+(check-assert ((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) isNegative))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) isNegative) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: -0)) isNegative) not))
 
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isNegative))
+(check-assert ((((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isStrictlyPostive) not))
+(check-assert ((((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isNonnegative) not))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isNonnegative))
+(check-assert (((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isNegative))
+(check-assert ((((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isNegative) not))
+(check-assert ((((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: -0)) negated) isNegative) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isStrictlyPostive))
+(check-assert ((((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isStrictlyPostive) not))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isNonnegative))
+(check-assert (((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isNonnegative))
+(check-assert ((((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 1)) negated) isNegative) not))
+(check-assert ((((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) isNegative) not))
+(check-assert ((((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: -0)) negated) isNegative) not))
+
+;; TODO::NEED FIXING
+;; (check-print (((LargePositiveInteger withMagnitude:
+;;                 (Natural fromSmall: 1)) negated) print) '1)
 
 
