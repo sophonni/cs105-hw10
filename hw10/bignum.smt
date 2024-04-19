@@ -68,7 +68,9 @@
       ;; if 'lst' is empty, add a 0. Else, return the resulting 'lst'
       ((lst isEmpty) ifTrue:ifFalse:
          {(lst addFirst: 0)}
-         {lst}))
+         {lst})
+      
+      lst)
 
    (method isZero  () (self subclassResponsibility))
 
@@ -431,10 +433,18 @@
    (method isStrictlyPostive () ((self isZero) not))
    (method negated () (LargeNegativeInteger withMagnitude: magnitude))
 
-   (method * (aNumber)
-      (magnitude * aNumber))
-   (method multiplyByLargePositiveInteger: (aNumber))
-   (method multiplyByLargeNegativeInteger: (aNumber))
+   (method * (aLargeInt)
+      (aLargeInt multiplyByLargePositiveInteger: self))
+
+   ;; +N * +M = +(N * M)
+   (method multiplyByLargePositiveInteger: (aLargePosInt)
+      (LargePositiveInteger withMagnitude:
+         (magnitude * (aLargePosInt magnitude))))
+   
+   ;; +N * -M = -(N * M)
+   (method multiplyByLargeNegativeInteger: (aLargeNegInt)
+      (LargeNegativeInteger withMagnitude:
+         (magnitude * (aLargeNegInt magnitude))))
 )
 
 ;; Represents a negative integer
@@ -458,6 +468,20 @@
    (method isNonnegative () (self isZero))
    (method isStrictlyPostive () false)
    (method negated () (LargePositiveInteger withMagnitude: magnitude))
+
+   (method * (aLargeInt)
+      (aLargeInt multiplyByLargeNegativeInteger: self))
+
+   ;; -N * +M = -(M * N)
+   (method multiplyByLargePositiveInteger: (aLargePosInt)
+      (LargeNegativeInteger withMagnitude:
+         (magnitude * (aLargePosInt magnitude))))
+   
+   ;; -N * -M = +(M * N)
+   (method multiplyByLargeNegativeInteger: (aLargeNegInt)
+      (LargePositiveInteger withMagnitude:
+         (magnitude * (aLargeNegInt magnitude))))
+
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -522,8 +546,20 @@
 (check-assert ((((LargeNegativeInteger withMagnitude:
                   (Natural fromSmall: -0)) negated) isNegative) not))
 
-;; TODO::NEED FIXING
-;; (check-print (((LargePositiveInteger withMagnitude:
-;;                 (Natural fromSmall: 1)) negated) print) '1)
+(check-print (LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) 1)
+(check-print (LargePositiveInteger withMagnitude: (Natural fromSmall: 123)) 123)
+(check-print (LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 123)) -123)
+(check-print ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 123)) negated) -123)
+(check-print ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 0)) negated) 0)
+(check-print ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: -0)) negated) 0)
+(check-print ((LargePositiveInteger withMagnitude:
+                  (Natural fromSmall: 4321423)) negated) -4321423)
+(check-print ((LargeNegativeInteger withMagnitude:
+                  (Natural fromSmall: 4321423)) negated) 4321423)
 
-
+(val four (LargePositiveInteger withMagnitude: (Natural fromSmall: 4)))
+(val neg-four (LargeNegativeInteger withMagnitude: (Natural fromSmall: 4)))
