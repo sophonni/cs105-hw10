@@ -96,7 +96,7 @@ example.
         Which message names are part of the _instance_ protocol for
         `TikzCanvas`?
 
-        >
+        > n/a
 
 
     (b) In general, what do you do with messages in a _class_ protocol, and how

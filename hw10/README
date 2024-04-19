@@ -1,7 +1,7 @@
 README
 CS 105 - Object-Oriented Programming in Smalltalk
 
-Authors: Sophonni Dy (sdy01), William Randall ()
+Authors: Sophonni Dy (sdy01), William Randall (wranda01)
 
 Parts of the assignment completed: all
 
@@ -11,23 +11,14 @@ Any comments or feedback for course staff: none
 
 Command Reference:
     - clear && usmalltalk -q < bignum.smt
-    - echo '(use bignum.smt) ({(neg-four * four)} messageTrace)' | usmalltalk -qq  | grep multiplyByLarge
+    - echo '(use bignum.smt) ({(neg-four * four)} messageTrace)'
+        | usmalltalk -qq 
+        | grep multiplyByLarge
         OR
     - ledit usmalltalk
     - (use bignum.smt)
 
-Time Track:
-    12:30 pm - 1:28 pm
-    1:45 pm - 5:00 pm
-    1:40 pm - 4:50 pm
-    1:30 pm - 3:00 pm
-    3:05 pm - 4:20 pm
-
-TODO:
-    - CQ::double check 3.a
-    - CQ::double check 7.a
-    - CQ::double check 7.b
-    - exercise1::step6::do we need to throw exception or some sort when given 'x' < 0
-    - exercise1::step20::why do we need to value 'value' to evaluate the block
-    - exercise2::step2::step6::print function prints 'nil' after desired value
-    - Change base
+    Pre-Submission Commands
+        - echo '(use bignum.smt) (use bignum-tests.smt)' | usmalltalk -qq
+        - /comp/105/bin/usmalltalk -q < bignum.smt > /dev/null
+        - submit105-small

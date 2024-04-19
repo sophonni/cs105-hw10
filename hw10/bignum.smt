@@ -26,7 +26,7 @@
       })
    )
 
-   (class-method base () 2) ; private
+   (class-method base () 500) ; private
 
    ; private methods suggested from textbook (page 672)
    (method modBase () (self subclassResponsibility)) 
@@ -141,7 +141,7 @@
    (method minus:borrow: (aNatural b)
       (((aNatural isZero) & (b = 0)) ifTrue:ifFalse:
          {self}
-         {(self error: ('Bad Subtraction))}))
+         {(self error: 'bad-subtraction)}))
 )
 
 ; Represents a natural number greater than 0
@@ -256,27 +256,51 @@
       ;; (check-print  (DebugNat of: ((Natural fromSmall: 65536) + 
       ;;                             (Natural fromSmall: 1))) 0,6,5,5,3,7)
 
-
       ;; BASE 2 TESTS
+      ;; (check-print (DebugNat of: 
+      ;;                (Natural fromSmall: ((Natural base) * (Natural base))))
+      ;;             0,1,0,0)
+
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1))
+      ;;             0,1)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1000))
+      ;;             0,1,1,1,1,1,0,1,0,0,0)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 1234))
+      ;;             0,1,0,0,1,1,0,1,0,0,1,0)
+      ;; (check-print (DebugNat of: (Natural fromSmall: 4096))
+      ;;             0,1,0,0,0,0,0,0,0,0,0,0,0,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 4) divBase)) 0,1,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 5) divBase)) 0,1,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 6) divBase)) 0,1,1)
+      ;; (check-print  ((Natural fromSmall: 4) modBase) 0)
+      ;; (check-print  ((Natural fromSmall: 5) modBase) 1)
+      ;; (check-print  ((Natural fromSmall: 6) modBase) 0)
+      ;; (check-print  (DebugNat of:
+      ;;                   ((Natural fromSmall: 2) timesBase)) 0,1,0,0)
+      ;; (check-print  (DebugNat of:
+      ;;                   ((Natural fromSmall: 5) timesBase)) 0,1,0,1,0)
+      ;; (check-print  (DebugNat of:
+      ;;                   ((Natural fromSmall: 6) timesBase)) 0,1,1,0,0)
+      ;; (check-print  (DebugNat of:
+      ;;                   ((Natural fromSmall: 1) + (Natural fromSmall: 1)))
+      ;;                      0,1,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 8) sdiv: 2)) 0,1,0,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 5) sdiv: 2)) 0,1,0)
+      ;; (check-print  (DebugNat of: ((Natural fromSmall: 200) sdiv: 51)) 0,1,1)
+      ;; (Natural addSelector:withMethod: 'squared
+      ;;    (compiled-method () (self * self)))
+      ;; (Natural addSelector:withMethod: 'coerce:
+      ;;    (compiled-method (i) (Natural fromSmall: i)))
+      ;; (Natural addSelector:withMethod: 'raisedToInteger:
+      ;;    (Number compiledMethodAt: 'raisedToInteger:))
+      ;; (check-print ((Natural fromSmall: 10) raisedToInteger: 10) 10000000000)
+      ;; (check-print ((Natural fromSmall:  9) raisedToInteger:  9)   387420489)
+
       (check-assert ((Natural fromSmall: 0) isZero))
       (check-assert (((Natural fromSmall: 1) isZero) not))
       (check-assert (((Natural fromSmall: 100) isZero) not))
       (check-print (DebugNat of: (Natural fromSmall: 0))
                    0)
-      (check-print (DebugNat of: 
-                     (Natural fromSmall: ((Natural base) * (Natural base))))
-                  0,1,0,0)
-
-      (check-print (DebugNat of: (Natural fromSmall: 1))
-                  0,1)
-      (check-print (DebugNat of: (Natural fromSmall: 1000))
-                  0,1,1,1,1,1,0,1,0,0,0)
-      (check-print (DebugNat of: (Natural fromSmall: 1234))
-                  0,1,0,0,1,1,0,1,0,0,1,0)
-      (check-print (DebugNat of: (Natural fromSmall: 4096))
-                  0,1,0,0,0,0,0,0,0,0,0,0,0,0)
-
-
 
       (check-assert (((NatZero new) divBase) isZero))
       (check-assert (((NatZero new) divBase) isKindOf: NatZero))
@@ -288,35 +312,19 @@
       (check-assert (((NatZero new) timesBase) isKindOf: NatZero))
       (check-assert (((NatZero new) timesBase) isKindOf: Natural))
 
-      (check-assert (((Natural fromSmall: 4) divBase) isKindOf: NatNonzero))
+      (check-assert (((Natural fromSmall: 4) divBase) isKindOf: NatZero))
       (check-assert (((Natural fromSmall: 4) divBase) isKindOf: Natural))
-      (check-print  (DebugNat of: ((Natural fromSmall: 4) divBase)) 0,1,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 5) divBase)) 0,1,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 6) divBase)) 0,1,1)
 
       (check-assert (((Natural fromSmall: 4) modBase) isKindOf: SmallInteger))
-      (check-print  ((Natural fromSmall: 4) modBase) 0)
-      (check-print  ((Natural fromSmall: 5) modBase) 1)
-      (check-print  ((Natural fromSmall: 6) modBase) 0)
 
       (check-assert (((Natural fromSmall: 4) timesBase) isKindOf: NatNonzero))
       (check-assert (((Natural fromSmall: 4) timesBase) isKindOf: Natural))
-      (check-print  (DebugNat of: ((Natural fromSmall: 2) timesBase)) 0,1,0,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 5) timesBase)) 0,1,0,1,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 6) timesBase)) 0,1,1,0,0)
 
       (check-error ((NatZero new) minus:borrow: (Natural fromSmall: 0) 1))
       (check-error ((NatZero new) minus:borrow: (Natural fromSmall: 1) 0))
       (check-assert (((NatZero new) minus:borrow: (Natural fromSmall: 0) 0)
                      isZero))
 
-      (check-print  (DebugNat of:
-                        ((Natural fromSmall: 1) + (Natural fromSmall: 1)))
-                           0,1,0)
-
-      (check-print  (DebugNat of: ((Natural fromSmall: 8) sdiv: 2)) 0,1,0,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 5) sdiv: 2)) 0,1,0)
-      (check-print  (DebugNat of: ((Natural fromSmall: 200) sdiv: 51)) 0,1,1)
       (check-expect ((Natural fromSmall: 200) smod: 49) 4)
       (check-expect ((Natural fromSmall: 0) smod: 5) 0)
       (check-expect ((Natural fromSmall: 5) smod: 1) 0)
@@ -366,15 +374,6 @@
                      subtract:withDifference:ifNegative:
                      (Natural fromSmall: 0) [block (x) x]
                      {(self error: 'Natural-subtraction-went-negative)}) 0)
-
-      ;; (Natural addSelector:withMethod: 'squared
-      ;;    (compiled-method () (self * self)))
-      ;; (Natural addSelector:withMethod: 'coerce:
-      ;;    (compiled-method (i) (Natural fromSmall: i)))
-      ;; (Natural addSelector:withMethod: 'raisedToInteger:
-      ;;    (Number compiledMethodAt: 'raisedToInteger:))
-      ;; (check-print ((Natural fromSmall: 10) raisedToInteger: 10) 10000000000)
-      ;; (check-print ((Natural fromSmall:  9) raisedToInteger:  9)   387420489)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -529,140 +528,146 @@
 ;; Put your unit tests for Exercise 2 here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(check-assert ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) isStrictlyPostive))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) isStrictlyPostive) not))
-(check-assert ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) isNonnegative))
-(check-assert ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) isNonnegative))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) isNegative) not))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) isNegative) not))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: -0)) isNegative) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) isStrictlyPostive) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) isStrictlyPostive) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) isNonnegative) not))
-(check-assert ((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) isNonnegative))
-(check-assert ((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) isNegative))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) isNegative) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: -0)) isNegative) not))
+      (check-assert ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) isStrictlyPostive))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) isStrictlyPostive) not))
+      (check-assert ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) isNonnegative))
+      (check-assert ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) isNonnegative))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) isNegative) not))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) isNegative) not))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: -0)) isNegative) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) isStrictlyPostive) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) isStrictlyPostive) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) isNonnegative) not))
+      (check-assert ((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) isNonnegative))
+      (check-assert ((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) isNegative))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) isNegative) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: -0)) isNegative) not))
 
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isNegative))
-(check-assert ((((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isStrictlyPostive) not))
-(check-assert ((((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isNonnegative) not))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isNonnegative))
-(check-assert (((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isNegative))
-(check-assert ((((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isNegative) not))
-(check-assert ((((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: -0)) negated) isNegative) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isStrictlyPostive))
-(check-assert ((((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isStrictlyPostive) not))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isNonnegative))
-(check-assert (((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isNonnegative))
-(check-assert ((((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 1)) negated) isNegative) not))
-(check-assert ((((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) isNegative) not))
-(check-assert ((((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: -0)) negated) isNegative) not))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isNegative))
+      (check-assert ((((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated)
+                           isStrictlyPostive) not))
+      (check-assert ((((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isNonnegative) not))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated) isNonnegative))
+      (check-assert (((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isNegative))
+      (check-assert ((((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated) isNegative) not))
+      (check-assert ((((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: -0)) negated) isNegative) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isStrictlyPostive))
+      (check-assert ((((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated)
+                           isStrictlyPostive) not))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isNonnegative))
+      (check-assert (((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated) isNonnegative))
+      (check-assert ((((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 1)) negated) isNegative) not))
+      (check-assert ((((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated) isNegative) not))
+      (check-assert ((((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: -0)) negated) isNegative) not))
 
-(check-print (LargePositiveInteger withMagnitude: (Natural fromSmall: 1)) 1)
-(check-print (LargePositiveInteger withMagnitude: (Natural fromSmall: 123)) 123)
-(check-print (LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 123)) -123)
+      (check-print (LargePositiveInteger withMagnitude:
+                     (Natural fromSmall: 1)) 1)
+      (check-print (LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 123)) 123)
+      (check-print (LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 123)) -123)
 
-(check-print ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 0)) negated) 0)
-(check-print ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: -0)) negated) 0)
-(check-print ((LargePositiveInteger withMagnitude:
-                  (Natural fromSmall: 4321423)) negated) -4321423)
-(check-print ((LargeNegativeInteger withMagnitude:
-                  (Natural fromSmall: 4321423)) negated) 4321423)
+      (check-print ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 0)) negated) 0)
+      (check-print ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: -0)) negated) 0)
+      (check-print ((LargePositiveInteger withMagnitude:
+                        (Natural fromSmall: 4321423)) negated) -4321423)
+      (check-print ((LargeNegativeInteger withMagnitude:
+                        (Natural fromSmall: 4321423)) negated) 4321423)
 
-;; (val four (LargePositiveInteger withMagnitude: (Natural fromSmall: 4)))
-;; (val neg-four (LargeNegativeInteger withMagnitude: (Natural fromSmall: 4)))
-(check-print ((LargePositiveInteger withMagnitude:
-               (Natural fromSmall: 123)) *
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 1))) 123)
-(check-print ((LargePositiveInteger withMagnitude:
-               (Natural fromSmall: 123)) *
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 1))) -123)
-(check-print ((LargeNegativeInteger withMagnitude:
-               (Natural fromSmall: 123)) *
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 1))) 123)
-(check-print ((LargeNegativeInteger withMagnitude:
-               (Natural fromSmall: 123)) *
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 1))) -123)
-(check-print ((LargeNegativeInteger withMagnitude:
-               (Natural fromSmall: 0)) *
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 1))) 0)
-(check-print ((LargeNegativeInteger withMagnitude:
-               (Natural fromSmall: 0)) *
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 0))) 0)
-(check-print ((LargePositiveInteger withMagnitude:
-               (Natural fromSmall: 0)) *
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 5))) 0)
+      ;; (val four (LargePositiveInteger withMagnitude:
+      ;;             (Natural fromSmall: 4)))
+      ;; (val neg-four (LargeNegativeInteger withMagnitude:
+      ;;             (Natural fromSmall: 4)))
+      (check-print ((LargePositiveInteger withMagnitude:
+                     (Natural fromSmall: 123)) *
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 1))) 123)
+      (check-print ((LargePositiveInteger withMagnitude:
+                     (Natural fromSmall: 123)) *
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 1))) -123)
+      (check-print ((LargeNegativeInteger withMagnitude:
+                     (Natural fromSmall: 123)) *
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 1))) 123)
+      (check-print ((LargeNegativeInteger withMagnitude:
+                     (Natural fromSmall: 123)) *
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 1))) -123)
+      (check-print ((LargeNegativeInteger withMagnitude:
+                     (Natural fromSmall: 0)) *
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 1))) 0)
+      (check-print ((LargeNegativeInteger withMagnitude:
+                     (Natural fromSmall: 0)) *
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 0))) 0)
+      (check-print ((LargePositiveInteger withMagnitude:
+                     (Natural fromSmall: 0)) *
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 5))) 0)
 
 
 
-(check-print ((LargePositiveInteger withMagnitude:
-               (Natural fromSmall: 4)) + 
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 5))) -1)
-(check-print ((LargePositiveInteger withMagnitude: 
-               (Natural fromSmall: 4)) + 
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 5))) 9)
-(check-print ((LargePositiveInteger withMagnitude: 
-               (Natural fromSmall: 5)) + 
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 4))) 1)
-(check-print ((LargeNegativeInteger withMagnitude: 
-               (Natural fromSmall: 4)) + 
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 5))) 1)
-(check-print ((LargeNegativeInteger withMagnitude: 
-               (Natural fromSmall: 5)) + 
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 4))) -1)
-(check-print ((LargeNegativeInteger withMagnitude: 
-               (Natural fromSmall: 5)) + 
-                  (LargeNegativeInteger withMagnitude:
-                     (Natural fromSmall: 4))) -9)
-(check-print ((LargeNegativeInteger withMagnitude: 
-               (Natural fromSmall: 0)) + 
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 0))) 0)
-(check-print ((LargeNegativeInteger withMagnitude: 
-               (Natural fromSmall: 42324)) + 
-                  (LargePositiveInteger withMagnitude:
-                     (Natural fromSmall: 42324))) 0)
+      (check-print ((LargePositiveInteger withMagnitude:
+                     (Natural fromSmall: 4)) + 
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 5))) -1)
+      (check-print ((LargePositiveInteger withMagnitude: 
+                     (Natural fromSmall: 4)) + 
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 5))) 9)
+      (check-print ((LargePositiveInteger withMagnitude: 
+                     (Natural fromSmall: 5)) + 
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 4))) 1)
+      (check-print ((LargeNegativeInteger withMagnitude: 
+                     (Natural fromSmall: 4)) + 
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 5))) 1)
+      (check-print ((LargeNegativeInteger withMagnitude: 
+                     (Natural fromSmall: 5)) + 
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 4))) -1)
+      (check-print ((LargeNegativeInteger withMagnitude: 
+                     (Natural fromSmall: 5)) + 
+                        (LargeNegativeInteger withMagnitude:
+                           (Natural fromSmall: 4))) -9)
+      (check-print ((LargeNegativeInteger withMagnitude: 
+                     (Natural fromSmall: 0)) + 
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 0))) 0)
+      (check-print ((LargeNegativeInteger withMagnitude: 
+                     (Natural fromSmall: 42324)) + 
+                        (LargePositiveInteger withMagnitude:
+                           (Natural fromSmall: 42324))) 0)
