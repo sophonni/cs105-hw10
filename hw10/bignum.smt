@@ -296,9 +296,9 @@
       ;; (check-print ((Natural fromSmall: 10) raisedToInteger: 10) 10000000000)
       ;; (check-print ((Natural fromSmall:  9) raisedToInteger:  9)   387420489)
 
-      (check-assert ((Natural fromSmall: 0) isZero))
+      (check-assert (((Natural fromSmall: 0) validated) isZero))
       (check-assert (((Natural fromSmall: 1) isZero) not))
-      (check-assert (((Natural fromSmall: 100) isZero) not))
+      (check-assert ((((Natural fromSmall: 100) validated) isZero) not))
       (check-print (DebugNat of: (Natural fromSmall: 0))
                    0)
 
